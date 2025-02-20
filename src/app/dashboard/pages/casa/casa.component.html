@@ -1,0 +1,69 @@
+<div class="card shadow border-0 rounded-4">
+  <!-- Header Card -->
+  <div class="card-header bg-gradient-primary text-white py-3">
+    <h1 class="card-title text-center fw-bold">
+      <i class="fa-solid fa-city me-2"></i>Gestión de Casas
+    </h1>
+  </div>
+
+  <!-- Filtros y botones -->
+  <div class="card-body bg-light">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <button class="btn btn-primary rounded-pill px-4" (click)="openFormCasa()">
+        <i class="fa-solid fa-plus me-2"></i>Agregar Casa
+      </button>
+      <button class="btn btn-secondary rounded-pill px-4" (click)="toggleCasas()">
+        <i class="fa-solid fa-eye me-2"></i>{{ showingActive ? 'Mostrar Inactivos' : 'Mostrar Activos' }}
+      </button>
+    </div>
+
+    <!-- Tabla de Casas -->
+    <div class="table-responsive">
+      <table class="table align-middle table-hover table-striped">
+        <thead class="table-primary text-center">
+          <tr>
+            <th scope="col"><i class="fa-solid fa-hashtag"></i> ID</th>
+            <th scope="col"><i class="fa-solid fa-house-user"></i> Nombre</th>
+            <th scope="col"><i class="fa-solid fa-map-marker-alt"></i> Dirección</th>
+            <th scope="col"><i class="fa-solid fa-circle-info"></i> Estado</th>
+            <th scope="col"><i class="fa-solid fa-gears"></i> Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let casa of casas" class="text-center">
+            <td>{{ casa.id_casa }}</td>
+            <td class="fw-semibold">{{ casa.nombre }}</td>
+            <td>{{ casa.direccion }}</td>
+            <td>
+              <span class="badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center"
+                    [ngClass]="casa.estado === 'A' ? 'bg-success' : 'bg-danger'">
+                <i class="fa-solid fa-circle me-2"></i>
+                {{ casa.estado === 'A' ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
+              <!-- Botón para cambiar estado -->
+              <button 
+                class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                [ngClass]="casa.estado === 'A' ? 'btn-outline-danger' : 'btn-outline-success'"
+                (click)="toggleCasaState(casa.id_casa, casa.nombre, casa.estado)">
+                <i class="fa-solid" 
+                   [ngClass]="casa.estado === 'A' ? 'fa-trash-can' : 'fa-recycle'">
+                </i> 
+                {{ casa.estado === 'A' ? 'Eliminar' : 'Restaurar' }}
+              </button>
+
+              <!-- Botón para editar -->
+              <button 
+                *ngIf="casa.estado === 'A'"
+                class="btn btn-sm btn-outline-warning rounded-pill ms-2 d-flex align-items-center justify-content-center"
+                (click)="editCasa(casa)">
+                <i class="fa-solid fa-pencil me-1"></i> Editar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

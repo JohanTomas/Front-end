@@ -1,0 +1,49 @@
+<div class="dialog-content">
+  <button class="close-button" (click)="cancel()">×</button>
+  <form *ngIf="casaForm" [formGroup]="casaForm" (ngSubmit)="submitForm()">
+    <!-- Paso 1: Datos Generales -->
+    <div *ngIf="step === 1">
+      <h2 class="step-title">Datos de la Casa</h2>
+      <div class="form-group">
+        <!-- Nombre de la Casa -->
+        <label for="nombre">Nombre de la Casa</label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          class="form-input"
+        />
+        <div *ngIf="casaForm?.get('nombre')?.invalid && casaForm?.get('nombre')?.touched">
+          <small *ngIf="casaForm?.get('nombre')?.hasError('required')" class="error-message">El nombre es obligatorio.</small>
+          <small *ngIf="casaForm?.get('nombre')?.hasError('pattern')" class="error-message">El nombre solo debe contener letras y espacios.</small>
+        </div>
+        
+        <!-- Dirección -->
+        <label for="direccion">Dirección</label>
+        <input
+          type="text"
+          id="direccion"
+          formControlName="direccion"
+          class="form-input"
+        />
+        <div *ngIf="casaForm?.get('direccion')?.invalid && casaForm?.get('direccion')?.touched">
+          <small *ngIf="casaForm?.get('direccion')?.hasError('required')" class="error-message">La dirección es obligatoria.</small>
+          <small *ngIf="casaForm?.get('direccion')?.hasError('pattern')" class="error-message">La dirección debe tener un formato válido (Ej: Av. Central 678, Ciudad).</small>
+        </div>
+        
+        <!-- Estado -->
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado" class="form-input">
+          <option value="A">Activo</option>
+          <option value="I">Inactivo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button (click)="previousStep()" *ngIf="step > 1">Atrás</button>
+      <button (click)="nextStep()" *ngIf="step < 1">Siguiente</button>
+      <button type="submit" *ngIf="step === 1" class="primary-button">Enviar</button>
+    </div>
+  </form>  
+</div>

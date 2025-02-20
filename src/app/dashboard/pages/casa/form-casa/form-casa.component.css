@@ -1,0 +1,79 @@
+.dialog-content {
+  width: auto; /* Ancho fijo para un diseño más pequeño */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff; /* Fondo blanco */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+  position: relative; /* Para el botón de cerrar */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  transition: color 0.3s; /* Transición suave */
+}
+
+.close-button:hover {
+  color: #ff0000; /* Cambiar color al pasar el ratón */
+}
+
+.step-title {
+  font-size: 1.4rem; /* Tamaño de fuente más pequeño */
+  margin-bottom: 1rem;
+  color: #333;
+  border-bottom: 2px solid #007bff; /* Línea abajo del título */
+  padding-bottom: 5px; /* Espaciado bajo el título */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Espaciado entre los campos */
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.25rem; /* Espaciado reducido */
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+}
+
+.form-input {
+  padding: 8px; /* Relleno reducido */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  transition: border-color 0.3s; /* Transición suave */
+}
+
+.form-input:focus {
+  border-color: #007bff; /* Color de borde al enfocar */
+  outline: none;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px; /* Espaciado reducido */
+}
+
+.primary-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px; /* Ajustar el relleno */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+.primary-button:hover {
+  background-color: #0056b3; /* Color al pasar el ratón */
+}

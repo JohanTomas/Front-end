@@ -1,0 +1,43 @@
+<div class="dialog-content">
+    <button class="close-button" (click)="cancel()">×</button>
+    <form *ngIf="consumoForm" [formGroup]="consumoForm" (ngSubmit)="submitForm()">
+        <!-- Paso 1: Datos Generales -->
+        <div *ngIf="step === 1">
+            <h2 class="step-title">Datos del Consumo</h2>
+            <div class="form-group">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" formControlName="fecha" class="form-input" />
+
+                <label for="casa">Casa</label>
+                <select id="id_casa" formControlName="id_casa" class="form-select">
+                    <option *ngFor="let casa of casas" [value]="casa.id_casa">{{ casa.nombre }}</option>
+                </select>
+            
+                <label for="cantidad">Cantidad de Huevos</label>
+                <input type="number" id="cantidad" formControlName="cantidad" class="form-input" (input)="onCantidadChange()" />
+            
+                <label for="peso">Peso</label>
+                <input type="text" id="peso" formControlName="peso" class="form-input" readonly />
+            
+                <label for="precio">Precio</label>
+                <input type="number" id="precio" formControlName="precio" class="form-input" (input)="onPrecioChange()" />
+            
+                <label for="valorventa">Valor de Venta</label>
+                <input type="text" id="valorventa" formControlName="valorventa" class="form-input" readonly />
+    
+                <!-- Estado -->
+                <label for="estado">Estado</label>
+                <select id="estado" formControlName="estado" class="form-input">
+                    <option value="A">Activo</option>
+                    <option value="I">Inactivo</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dialog-actions">
+            <button (click)="previousStep()" *ngIf="step > 1">Atrás</button>
+            <button (click)="nextStep()" *ngIf="step < 1">Siguiente</button>
+            <button type="submit" *ngIf="step === 1" class="primary-button">Enviar</button>
+        </div>
+    </form>
+</div>

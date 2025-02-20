@@ -1,0 +1,88 @@
+<div class="card shadow border-0 rounded-4">
+    <!-- Header Card -->
+    <div class="card-header bg-gradient-primary text-white py-3">
+      <h1 class="card-title text-center fw-bold">
+        <i class="fa-solid fa-city me-2"></i>Gestión de Consumo Interno
+      </h1>
+    </div>
+  
+    <!-- Filtros y botones -->
+    <div class="card-body bg-light">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-primary rounded-pill px-4" (click)="openFormConsumo()">
+          <i class="fa-solid fa-plus me-2"></i>Agregar Consumo
+        </button>
+        <button class="btn btn-secondary rounded-pill px-4" (click)="toggleConsumo()">
+          <i class="fa-solid fa-eye me-2"></i>{{ showingActive ? 'Mostrar Inactivos' : 'Mostrar Activos' }}
+        </button>
+
+        <button class="btn btn-danger mt-1" (click)="downloadPDF()">Descargar PDF</button>
+      </div>
+  
+      <!-- Tabla de Casas -->
+      <div class="table-responsive">
+        <table class="table align-middle table-hover table-striped">
+          <thead class="table-primary text-center">
+            <tr>
+                <th scope="col"><i class="fa-solid fa-hashtag"></i> ID</th>
+                <th scope="col"><i class="fa-solid fa-calendar"></i> Fecha</th>
+                <th scope="col">Casas</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Precio Uni.</th>
+                <th scope="col">Valor Vent.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let consumo of consumo" class="text-center">
+                <td>{{ consumo.id_consumo }}</td>
+                <td class="fw-semibold">{{ consumo.fecha | date:'dd/MMM/yyyy':'es' }}</td>
+                <td>{{ consumo.nombre }}</td>
+                <td>{{ consumo.cantidad }}</td>
+                <td>{{ consumo.peso }}</td>
+                <td>{{ consumo.precio }}</td>
+                <td>{{ consumo.valorventa }}</td>
+                <td>
+                  <span class="badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center"
+                        [ngClass]="consumo.estado === 'A' ? 'bg-success' : 'bg-danger'">
+                    <i class="fa-solid fa-circle me-2"></i>
+                    {{ consumo.estado === 'A' ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                <!-- Botón para cambiar estado -->
+                <button 
+                  class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                  [ngClass]="consumo.estado === 'A' ? 'btn-outline-danger' : 'btn-outline-success'"
+                  (click)="toggleConsumoState(consumo.id_consumo, consumo.id_casa, consumo.estado)">
+                  <i class="fa-solid" 
+                     [ngClass]="consumo.estado === 'A' ? 'fa-trash-can' : 'fa-recycle'">
+                  </i> 
+                  {{ consumo.estado === 'A' ? 'Eliminar' : 'Restaurar' }}
+                </button>
+  
+                <!-- Botón para editar -->
+                <button 
+                  *ngIf="consumo.estado === 'A'"
+                  class="btn btn-sm btn-outline-warning rounded-pill ms-2 d-flex align-items-center justify-content-center"
+                  (click)="editConsumo(consumo)">
+                  <i class="fa-solid fa-pencil me-1"></i> Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"><strong>TOTAL: </strong></td>
+              <td>{{ totalCantidad }}</td>
+              <td>{{ totalPeso }} kg</td>
+              <td>{{ totalPrecio | currency: 'S/. ' }}</td>
+              <td>{{ totalValorVenta | currency: 'S/. ' }}</td>
+              <td></td> <!-- Espacio vacío para alinear -->
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  

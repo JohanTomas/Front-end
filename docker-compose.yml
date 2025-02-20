@@ -1,0 +1,10 @@
+services:
+  app:
+    image: casas_fronten:latest 
+    ports:
+      - "4200:4200"
+    environment:
+      API_BACKEND : 'http://localhost:8080/'
+
+
+
