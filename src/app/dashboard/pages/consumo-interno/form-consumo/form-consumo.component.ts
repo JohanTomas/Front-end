@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConsumoService } from '../../services/consumo.service';
@@ -33,9 +34,11 @@ export class FormConsumoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private ConsumoService: ConsumoService,
-    private dialogRef: MatDialogRef<FormConsumoComponent>
+    private dialogRef: MatDialogRef<FormConsumoComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any // Inyectamos los datos aquí
   ) {
-    this.initializeForm();
+    console.log("Datos recibidos en el formulario:", data);
+    this.initializeForm(data);
   }
 
   ngOnInit(): void {
@@ -43,7 +46,7 @@ export class FormConsumoComponent implements OnInit {
   }
 
   // Inicializar el formulario
-  initializeForm(): void {
+  initializeForm(data?: any): void {
     this.consumoForm = this.fb.group({
       fecha: new FormControl(''),
       id_casa: new FormControl(''),
@@ -54,8 +57,8 @@ export class FormConsumoComponent implements OnInit {
       estado: new FormControl('A'),
     });
 
-    if (this.formData) {
-      this.consumoForm.patchValue(this.formData);
+    if (data) {
+      this.consumoForm.patchValue(data);
     }
   }
 
@@ -114,14 +117,14 @@ export class FormConsumoComponent implements OnInit {
 
       const consumoData = {
         fecha: formattedFecha,
-        id_casa: Number(this.consumoForm.value.id_casa),  // Convierte a número
-        cantidad: Number(this.consumoForm.value.cantidad),  // Convierte a número
-        peso: Number(this.consumoForm.value.peso),  // Convierte a número
-        precio: Number(this.consumoForm.value.precio),  // Convierte a número
-        valorventa: Number(this.consumoForm.value.valorventa),  // Convierte a número
+        id_casa: Number(this.consumoForm.value.id_casa),  // Convierte a número entero
+        cantidad: Number(this.consumoForm.value.cantidad),  // Puede ser entero
+        peso: parseFloat(this.consumoForm.value.peso),  // Convierte a float
+        precio: parseFloat(this.consumoForm.value.precio),  // Convierte a float
+        valorventa: parseFloat(this.consumoForm.value.valorventa),  // Convierte a float
         estado: this.consumoForm.value.estado || "A"
       };
-
+      
       console.log('Datos enviados: ', consumoData);
 
       // **Mueve el foco antes de cerrar el diálogo**

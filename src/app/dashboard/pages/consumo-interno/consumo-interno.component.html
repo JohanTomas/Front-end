@@ -39,9 +39,9 @@
                 <td class="fw-semibold">{{ consumo.fecha | date:'dd/MMM/yyyy':'es' }}</td>
                 <td>{{ consumo.nombre }}</td>
                 <td>{{ consumo.cantidad }}</td>
-                <td>{{ consumo.peso }}</td>
-                <td>{{ consumo.precio }}</td>
-                <td>{{ consumo.valorventa }}</td>
+                <td>{{ consumo.peso | number:'1.2-2' }}</td>
+                <td>{{ consumo.precio | number:'1.2-2'}}</td>
+                <td>{{ consumo.valorventa | number:'1.2-2'}}</td>
                 <td>
                   <span class="badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center"
                         [ngClass]="consumo.estado === 'A' ? 'bg-success' : 'bg-danger'">

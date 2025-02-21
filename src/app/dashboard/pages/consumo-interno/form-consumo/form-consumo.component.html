@@ -8,7 +8,7 @@
                 <label for="fecha">Fecha</label>
                 <input type="date" id="fecha" formControlName="fecha" class="form-input" />
 
-                <label for="casa">Casa</label>
+                <label for="id_casa">Casa</label>
                 <select id="id_casa" formControlName="id_casa" class="form-select">
                     <option *ngFor="let casa of casas" [value]="casa.id_casa">{{ casa.nombre }}</option>
                 </select>

@@ -65,18 +65,19 @@ export class ConsumoInternoComponent {
   }
 
   editConsumo(consumo: any): void {
-    this.consumoToEdit = consumo; // Guarda la casa seleccionada para editar
+    this.consumoToEdit = consumo; // Guarda el consumo seleccionado para editar
     const dialogRef = this.dialog.open(FormConsumoComponent, {
       width: "400px",
-      data: this.consumoToEdit, // Pasa la casa seleccionada al formulario de edición
+      data: this.consumoToEdit, // Pasa los datos al formulario
     });
   
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadConsumo(); // Recarga las casas después de editar
+        this.loadConsumo(); // Recarga la lista después de editar
       }
     });
   }
+ 
 
   loadConsumo(): void {
     const service = this.showingActive
@@ -99,9 +100,9 @@ export class ConsumoInternoComponent {
   // Función para calcular los totales de las columnas
   calculateTotals(): void {
     this.totalCantidad = this.consumo.reduce((sum, item) => sum + (Number(item.cantidad) || 0), 0);
-    this.totalPeso = this.consumo.reduce((sum, item) => sum + (Number(item.peso) || 0), 0);
-    this.totalPrecio = this.consumo.reduce((sum, item) => sum + (Number(item.precio) || 0), 0);
-    this.totalValorVenta = this.consumo.reduce((sum, item) => sum + (Number(item.valorventa) || 0), 0);
+    this.totalPeso = this.consumo.reduce((sum, item) => sum + (parseFloat(item.peso) || 0), 0);
+    this.totalPrecio = this.consumo.reduce((sum, item) => sum + (parseFloat(item.precio) || 0), 0);
+    this.totalValorVenta = this.consumo.reduce((sum, item) => sum + (parseFloat(item.valorventa) || 0), 0);
   }
 
   // ✅ Función para generar y descargar el PDF
@@ -188,7 +189,6 @@ export class ConsumoInternoComponent {
       }
     });
   }
-
 
   openFormConsumo(): void {
     const dialogRef = this.dialog.open(FormConsumoComponent, {
