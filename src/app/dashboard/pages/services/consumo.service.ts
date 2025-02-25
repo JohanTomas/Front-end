@@ -48,10 +48,17 @@ export class ConsumoService {
     return this.http.put(url, {});
   }
 
-  updateConsumo(id: number, consumoData: Consumo): Observable<any> {
+  /*updateConsumo(id: number, consumoData: Consumo): Observable<any> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.put(url, consumoData);
-  }
+  }*/
+    updateConsumo(id: number, consumo: any): Observable<any> {
+      // Eliminamos 'nombre' por seguridad antes de enviarlo
+      delete consumo.nombre;
+    
+      return this.http.put(`${this.baseUrl}/${id}`, consumo);
+    }
+    
 
   getCasas(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:8080/casas'); // URL del backend

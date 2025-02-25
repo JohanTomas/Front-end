@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Validators, FormBuilder, FormGroup, FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { CasaService } from "../../services/casa.service";
@@ -30,34 +31,31 @@ export class FormCasaComponent implements OnInit {
   casaForm?: FormGroup;
   step = 1;
   formData: any = null;
+  isEditing: boolean = false; // Nueva variable para identificar si es edición
 
   constructor(
     private fb: FormBuilder,
     private casaService: CasaService,
-    private dialogRef: MatDialogRef<FormCasaComponent>
+    private dialogRef: MatDialogRef<FormCasaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any // Inyectamos datos aquí
   ) {
-    this.initializeForm();
+    this.isEditing = !!data?.id_casa; // Si tiene un id, significa que es edición
+    this.initializeForm(data);
   }
 
   ngOnInit(): void {
     // No es necesario hacer nada aquí
   }
-
-  initializeForm(): void {
+  initializeForm(data?: any): void {
     this.casaForm = this.fb.group({
-      nombre: new FormControl(
-        '',
-        [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')] // Solo letras y espacios
-      ),
-      direccion: new FormControl(
-        '',
-        [Validators.required, Validators.pattern('^[A-Za-z0-9\\s,.-]+$')] // Formato de dirección válido
-      ),
-      estado: new FormControl('A', [Validators.required]), // Por defecto, "Activo"
+      id_casa: new FormControl(data?.id_casa || null), // Si hay ID, es edición
+      nombre: new FormControl(data?.nombre || '', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]),
+      direccion: new FormControl(data?.direccion || '', [Validators.required, Validators.pattern('^[A-Za-z0-9\\s,.-]+$')]),
+      estado: new FormControl(data?.estado || 'A', [Validators.required]),
     });
 
-    if (this.formData) {
-      this.casaForm.patchValue(this.formData);
+    if (data) {
+      this.casaForm.patchValue(data);
     }
   }
 
@@ -97,28 +95,36 @@ export class FormCasaComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (this.casaForm?.valid && this.validateForm()) {
-      const { nombre, direccion, estado } = this.casaForm.value;
-      const casaData = { nombre, direccion, estado };
+    if (this.casaForm?.valid) {
+      const casaData = this.casaForm.value;
 
-      this.casaService.registerCasa(casaData).subscribe({
-        next: () => {
-          Swal.fire(
-            'Registro Exitoso',
-            'La casa ha sido registrada correctamente.',
-            'success'
-          );
-          this.dialogRef.close(true);
-        },
-        error: (error: any) => {
-          Swal.fire(
-            'Error',
-            'No se pudo registrar la casa. Intenta nuevamente.',
-            'error'
-          );
-          console.error('Error al registrar la casa:', error);
-        },
-      });
+      console.log("Datos enviados: ", casaData);
+
+      if (this.isEditing) {
+        // Si estamos editando, llamamos a la función de actualización
+        this.casaService.updateCasa(casaData.id_casa, casaData).subscribe({
+          next: () => {
+            Swal.fire("Actualización Exitosa", "La casa ha sido actualizada.", "success");
+            this.dialogRef.close(true);
+          },
+          error: (error: any) => {
+            Swal.fire("Error", "No se pudo actualizar la casa.", "error");
+            console.error("Error al actualizar la casa:", error);
+          },
+        });
+      } else {
+        // Si es un nuevo registro
+        this.casaService.registerCasa(casaData).subscribe({
+          next: () => {
+            Swal.fire("Registro Exitoso", "La casa ha sido registrada correctamente.", "success");
+            this.dialogRef.close(true);
+          },
+          error: (error: any) => {
+            Swal.fire("Error", "No se pudo registrar la casa.", "error");
+            console.error("Error al registrar la casa:", error);
+          },
+        });
+      }
     }
   }
 

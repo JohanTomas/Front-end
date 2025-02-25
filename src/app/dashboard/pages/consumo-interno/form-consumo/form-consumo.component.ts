@@ -30,6 +30,7 @@ export class FormConsumoComponent implements OnInit {
   step = 1;
   formData: any = null;
   casas: any[] = []; // Lista de casas
+  isEditing: boolean = false; // Variable para controlar si es edición
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +38,7 @@ export class FormConsumoComponent implements OnInit {
     private dialogRef: MatDialogRef<FormConsumoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any // Inyectamos los datos aquí
   ) {
-    console.log("Datos recibidos en el formulario:", data);
+    this.isEditing = !!data?.id_consumo; // Si tiene ID, es edición
     this.initializeForm(data);
   }
 
@@ -48,15 +49,15 @@ export class FormConsumoComponent implements OnInit {
   // Inicializar el formulario
   initializeForm(data?: any): void {
     this.consumoForm = this.fb.group({
-      fecha: new FormControl(''),
-      id_casa: new FormControl(''),
-      cantidad: new FormControl(''),
-      peso: new FormControl(''),
-      precio: new FormControl(''),
-      valorventa: new FormControl(''),
-      estado: new FormControl('A'),
+      id_consumo: new FormControl(data?.id_consumo || null), // ID solo en edición
+      fecha: new FormControl(data?.fecha || ''),
+      id_casa: new FormControl(data?.id_casa || ''),
+      cantidad: new FormControl(data?.cantidad || ''),
+      peso: new FormControl(data?.peso || ''),
+      precio: new FormControl(data?.precio || ''),
+      valorventa: new FormControl(data?.valorventa || ''),
+      estado: new FormControl(data?.estado || 'A'),
     });
-
     if (data) {
       this.consumoForm.patchValue(data);
     }
@@ -109,41 +110,51 @@ export class FormConsumoComponent implements OnInit {
   }
 
 
+  // Guardar o actualizar consumo
   submitForm(): void {
     if (this.consumoForm) {
-      // Convertir la fecha al formato adecuado
-      const fecha = new Date(this.consumoForm.value.fecha);
-      const formattedFecha = fecha.toISOString().split('T')[0]; // 'yyyy-MM-dd'
-
+      const formData = this.consumoForm.value;
+      const formattedFecha = new Date(formData.fecha).toISOString().split('T')[0];
+  
       const consumoData = {
+        ...formData,
         fecha: formattedFecha,
-        id_casa: Number(this.consumoForm.value.id_casa),  // Convierte a número entero
-        cantidad: Number(this.consumoForm.value.cantidad),  // Puede ser entero
-        peso: parseFloat(this.consumoForm.value.peso),  // Convierte a float
-        precio: parseFloat(this.consumoForm.value.precio),  // Convierte a float
-        valorventa: parseFloat(this.consumoForm.value.valorventa),  // Convierte a float
-        estado: this.consumoForm.value.estado || "A"
+        id_casa: Number(formData.id_casa),
+        cantidad: Number(formData.cantidad),
+        peso: parseFloat(formData.peso),
+        precio: parseFloat(formData.precio),
+        valorventa: parseFloat(formData.valorventa),
       };
-      
+  
+      // Eliminamos el campo 'nombre' si por algún motivo llega a estar en el objeto
+      delete consumoData.nombre;
+  
       console.log('Datos enviados: ', consumoData);
-
-      // **Mueve el foco antes de cerrar el diálogo**
-      document.body.focus();
-      
-      this.ConsumoService.registerConsumo(consumoData).subscribe({
-        next: () => {
-          console.log('Formulario enviado con éxito');
-          this.dialogRef.close(true);
-        },
-        error: (error: any) => {
-          console.error('Error al registrar el consumo:', error);
-          console.error('Detalles del error:', error.message);
-          console.error('Código de estado:', error.status);
-          console.error('Respuesta del servidor:', error.error);
-        },
-      });
+  
+      if (this.isEditing) {
+        this.ConsumoService.updateConsumo(consumoData.id_consumo, consumoData).subscribe({
+          next: () => {
+            console.log('Consumo actualizado con éxito');
+            this.dialogRef.close(true);
+          },
+          error: (error: any) => {
+            console.error('Error al actualizar el consumo:', error);
+          },
+        });
+      } else {
+        this.ConsumoService.registerConsumo(consumoData).subscribe({
+          next: () => {
+            console.log('Consumo registrado con éxito');
+            this.dialogRef.close(true);
+          },
+          error: (error: any) => {
+            console.error('Error al registrar el consumo:', error);
+          },
+        });
+      }
     }
   }
+  
 
   cancel(): void {
     this.dialogRef.close(false);
