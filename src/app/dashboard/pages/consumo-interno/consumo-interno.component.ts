@@ -119,7 +119,7 @@ export class ConsumoInternoComponent {
       head: [['ID', 'Fecha', 'Casa', 'Cantidad', 'Peso', 'Precio Uni.', 'Valor Venta']],
       body: this.consumo.map(c => [
         c.id_consumo,
-        new Date(c.fecha).toLocaleDateString('es-ES'),
+        this.formatFecha(c.fecha),
         c.nombre,
         c.cantidad,
         `${c.peso} kg`,
@@ -142,6 +142,12 @@ export class ConsumoInternoComponent {
   
     // Guardar el PDF
     doc.save('Reporte_Consumo_Interno.pdf');
+  }
+
+  // ✅ Función que formatea la fecha correctamente sin cambiar la zona horaria
+  formatFecha(fechaString: string): string {
+    const [year, month, day] = fechaString.split('T')[0].split('-');
+    return `${day}/${month}/${year}`; // 🔥 Esto evita la conversión de zona horaria
   }
 
   toggleConsumoState(id: number, id_casa: number, estado: string): void {

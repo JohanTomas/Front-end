@@ -16,7 +16,7 @@ export const routes: Routes = [
         loadComponent: () => import('./dashboard/pages/casa/casa.component').then(m => m.CasaComponent),
       },
       {
-        path: 'consumo interno',
+        path: 'consumo-interno',
         title: 'Consumo',
         loadComponent: () => import('./dashboard/pages/consumo-interno/consumo-interno.component').then(m => m.ConsumoInternoComponent),
       },
